@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sude için özel bir soru 💌</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --pink: #ff6b9d;
+      --rose: #ff4081;
+      --light-pink: #fce4ec;
+      --purple: #9c27b0;
+      --lavender: #f3e5f5;
+      --cream: #fff8f0;
+      --gold: #ffd700;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a0533 0%, #3d0066 30%, #6a0080 60%, #1a0533 100%);
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Yıldız arka planı */
+    .stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      animation: twinkle var(--dur, 3s) ease-in-out infinite;
+      opacity: 0;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; transform: scale(0.5); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Yüzen kalpler */
+    .floating-hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .fheart {
+      position: absolute;
+      bottom: -50px;
+      font-size: var(--sz, 24px);
+      animation: floatUp var(--dur, 8s) ease-in infinite;
+      opacity: 0;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      80% { opacity: 0.6; }
+      100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* Ana içerik */
+    .container {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* EKRANLAR */
+    .screen {
+      display: none;
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    /* Kart */
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 32px;
+      padding: 50px 40px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+      animation: cardIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(60px) scale(0.9); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Zarf animasyonu (giriş ekranı) */
+    .envelope-wrapper {
+      margin-bottom: 30px;
+      cursor: pointer;
+    }
+
+    .envelope {
+      display: inline-block;
+      font-size: 80px;
+      animation: envelopePulse 2s ease-in-out infinite;
+      transition: transform 0.3s;
+      filter: drop-shadow(0 0 20px rgba(255, 107, 157, 0.8));
+    }
+
+    .envelope:hover {
+      transform: scale(1.15) rotate(-5deg);
+    }
+
+    @keyframes envelopePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    h1.title {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(2.2rem, 7vw, 3.5rem);
+      color: #fff;
+      text-shadow: 0 0 30px rgba(255,107,157,0.9), 0 2px 10px rgba(0,0,0,0.5);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.7);
+      font-size: clamp(0.85rem, 3vw, 1rem);
+      font-weight: 300;
+      margin-bottom: 30px;
+      letter-spacing: 0.5px;
+    }
+
+    .open-btn {
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      color: white;
+      border: none;
+      padding: 16px 48px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(255,64,129,0.5);
+      transition: all 0.3s;
+      letter-spacing: 0.5px;
+    }
+
+    .open-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 15px 35px rgba(255,64,129,0.6);
+    }
+
+    .open-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* MEKTUP EKRANI */
+    .letter-header {
+      margin-bottom: 28px;
+    }
+
+    .heart-big {
+      font-size: 60px;
+      animation: heartBeat 1.5s ease-in-out infinite;
+      display: block;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 0 15px rgba(255,64,129,0.9));
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      14% { transform: scale(1.18); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.12); }
+      56% { transform: scale(1); }
+    }
+
+    .letter-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(2rem, 6vw, 3rem);
+      color: #fff;
+      text-shadow: 0 0 20px rgba(255,107,157,0.8);
+      margin-bottom: 6px;
+    }
+
+    .letter-sub {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.85rem;
+      font-style: italic;
+    }
+
+    .letter-body {
+      background: rgba(255,255,255,0.06);
+      border-radius: 20px;
+      padding: 28px 24px;
+      margin-bottom: 28px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .letter-body p {
+      color: rgba(255,255,255,0.88);
+      font-size: clamp(0.88rem, 2.5vw, 1rem);
+      line-height: 1.85;
+      margin-bottom: 14px;
+    }
+
+    .letter-body p:last-child { margin-bottom: 0; }
+
+    .letter-body .highlight {
+      color: var(--pink);
+      font-weight: 600;
+    }
+
+    .letter-signature {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.4rem;
+      color: rgba(255,255,255,0.7);
+      margin-top: 14px;
+      font-style: italic;
+    }
+
+    .next-btn {
+      background: linear-gradient(135deg, #ff6b9d, #c2185b);
+      color: white;
+      border: none;
+      padding: 15px 44px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(255,64,129,0.4);
+      transition: all 0.3s;
+    }
+
+    .next-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(255,64,129,0.55);
+    }
+
+    /* SORU EKRANI */
+    .question-emoji {
+      font-size: 70px;
+      display: block;
+      margin-bottom: 16px;
+      animation: sway 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 18px rgba(255,215,0,0.7));
+    }
+
+    @keyframes sway {
+      0%, 100% { transform: rotate(-8deg); }
+      50% { transform: rotate(8deg); }
+    }
+
+    .question-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(2rem, 6vw, 3rem);
+      color: #fff;
+      text-shadow: 0 0 25px rgba(255,107,157,0.8);
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .question-sub {
+      color: rgba(255,255,255,0.65);
+      font-size: 0.9rem;
+      margin-bottom: 36px;
+    }
+
+    /* Fotoğraf çerçevesi */
+    .photo-frame {
+      width: 130px;
+      height: 130px;
+      margin: 0 auto 28px;
+      border-radius: 50%;
+      border: 4px solid var(--pink);
+      box-shadow: 0 0 0 6px rgba(255,107,157,0.25), 0 0 30px rgba(255,107,157,0.4);
+      overflow: hidden;
+      background: linear-gradient(135deg, #ff6b9d22, #9c27b022);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      animation: photoFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes photoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .buttons-area {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .yes-btn {
+      background: linear-gradient(135deg, #00c853, #00e676);
+      color: white;
+      border: none;
+      padding: 18px 52px;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(0,200,83,0.45);
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .yes-btn:hover {
+      transform: translateY(-4px) scale(1.07);
+      box-shadow: 0 16px 35px rgba(0,200,83,0.55);
+    }
+
+    .no-btn {
+      background: linear-gradient(135deg, #ef5350, #b71c1c);
+      color: white;
+      border: none;
+      padding: 18px 52px;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(239,83,80,0.35);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+
+    .no-btn:hover {
+      box-shadow: 0 8px 25px rgba(239,83,80,0.35);
+    }
+
+    .no-count-msg {
+      margin-top: 18px;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.82rem;
+      font-style: italic;
+      min-height: 22px;
+      transition: all 0.3s;
+    }
+
+    /* EVET EKRANI */
+    .yes-screen .card {
+      animation: celebrateIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes celebrateIn {
+      from { opacity: 0; transform: scale(0.5) rotate(-5deg); }
+      to { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+
+    .confetti-emoji {
+      font-size: 80px;
+      display: block;
+      margin-bottom: 16px;
+      animation: spin 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(-10deg) scale(1); }
+      100% { transform: rotate(10deg) scale(1.1); }
+    }
+
+    .yes-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      color: #fff;
+      text-shadow: 0 0 30px rgba(255,215,0,0.9), 0 0 60px rgba(255,107,157,0.6);
+      margin-bottom: 16px;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 20px rgba(255,215,0,0.8), 0 0 40px rgba(255,107,157,0.5); }
+      to { text-shadow: 0 0 40px rgba(255,215,0,1), 0 0 80px rgba(255,107,157,0.8), 0 0 120px rgba(255,64,129,0.4); }
+    }
+
+    .yes-msg {
+      color: rgba(255,255,255,0.85);
+      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+
+    .yes-hearts {
+      font-size: 2rem;
+      letter-spacing: 6px;
+      animation: heartBeat 1.5s ease-in-out infinite;
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .date-badge {
+      display: inline-block;
+      background: rgba(255,215,0,0.15);
+      border: 1px solid rgba(255,215,0,0.4);
+      color: var(--gold);
+      padding: 8px 24px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    /* Confetti parçacıkları */
+    .confetti-piece {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 9999;
+      animation: confettiFall var(--dur, 3s) ease-in var(--delay, 0s) forwards;
+    }
+
+    @keyframes confettiFall {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* Pulse ring */
+    .pulse-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid rgba(255,107,157,0.4);
+      animation: pulseRing 2s ease-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes pulseRing {
+      0% { transform: scale(0.8); opacity: 1; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .card {
+        padding: 36px 24px;
+        border-radius: 24px;
+      }
+
+      .buttons-area {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .yes-btn, .no-btn {
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
+      }
+    }
+
+    /* Parıltı efekti */
+    .sparkle {
+      position: absolute;
+      pointer-events: none;
+      animation: sparkleAnim 0.6s ease-out forwards;
+      z-index: 100;
+    }
+
+    @keyframes sparkleAnim {
+      0% { transform: scale(0) rotate(0deg); opacity: 1; }
+      100% { transform: scale(1.5) rotate(180deg); opacity: 0; }
+    }
+
+    /* Progress dots */
+    .progress-dots {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      transition: all 0.4s;
+    }
+
+    .dot.active {
+      background: var(--pink);
+      box-shadow: 0 0 10px rgba(255,107,157,0.6);
+      transform: scale(1.3);
+    }
+
+    .dot.done {
+      background: rgba(255,255,255,0.5);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Yıldızlar -->
+<div class="stars" id="stars"></div>
+
+<!-- Yüzen kalpler -->
+<div class="floating-hearts" id="fhearts"></div>
+
+<div class="container">
+
+  <!-- EKRAN 1: Giriş -->
+  <div class="screen active" id="screen-intro">
+    <div class="card">
+      <div class="progress-dots">
+        <div class="dot active" id="dot1"></div>
+        <div class="dot" id="dot2"></div>
+        <div class="dot" id="dot3"></div>
+      </div>
+
+      <div class="envelope-wrapper" onclick="openEnvelope()">
+        <div class="envelope" id="envelope">💌</div>
+      </div>
+
+      <h1 class="title">Sevgili Sude,</h1>
+      <p class="subtitle">Sana özel bir şey hazırladım&nbsp;✨</p>
+
+      <button class="open-btn" onclick="openEnvelope()">
+        💌 &nbsp; Mektubu Aç
+      </button>
+    </div>
+  </div>
+
+  <!-- EKRAN 2: Mektup -->
+  <div class="screen" id="screen-letter">
+    <div class="card">
+      <div class="progress-dots">
+        <div class="dot done"></div>
+        <div class="dot active"></div>
+        <div class="dot"></div>
+      </div>
+
+      <div class="letter-header">
+        <span class="heart-big">💗</span>
+        <h2 class="letter-title">Sude'ye Mektup</h2>
+        <p class="letter-sub">— içtenlikle yazıldı —</p>
+      </div>
+
+      <div class="letter-body">
+        <p>Merhaba <span class="highlight">Sude</span> 🌸</p>
+        <p>
+          Seninle geçirdiğim her an benim için çok değerli. Gülüşün, bakışların,
+          o küçük anlar... hepsi içimde güzel bir yer kaplıyor.
+        </p>
+        <p>
+          Sana bu soruyu sormak için çok düşündüm, çok hazırlandım.
+          Çünkü bu benim için gerçekten <span class="highlight">önemli</span>.
+        </p>
+        <p>
+          Şimdi sana en içten hislerimle, yüreğimden gelen bir soru sormak istiyorum...
+        </p>
+        <p class="letter-signature">— Senin için 🌹</p>
+      </div>
+
+      <button class="next-btn" onclick="goToQuestion()">
+        Soruyu Gör &nbsp; →
+      </button>
+    </div>
+  </div>
+
+  <!-- EKRAN 3: Soru -->
+  <div class="screen" id="screen-question">
+    <div class="card">
+      <div class="progress-dots">
+        <div class="dot done"></div>
+        <div class="dot done"></div>
+        <div class="dot active"></div>
+      </div>
+
+      <div class="photo-frame" id="photoFrame">
+        🌸
+      </div>
+
+      <span class="question-emoji">💍</span>
+      <h2 class="question-title">Benimle sevgili<br>olur musun?</h2>
+      <p class="question-sub">Sude, sana en içten duygularımla soruyorum...</p>
+
+      <div class="buttons-area" id="buttonsArea">
+        <button class="yes-btn" onclick="sayYes()">
+          ❤️ &nbsp; Evet, Olurum!
+        </button>
+        <button class="no-btn" id="noBtn" onmouseover="runAway()" ontouchstart="runAway()">
+          😔 &nbsp; Hayır
+        </button>
+      </div>
+
+      <p class="no-count-msg" id="noMsg"></p>
+    </div>
+  </div>
+
+  <!-- EKRAN 4: EVET! -->
+  <div class="screen yes-screen" id="screen-yes">
+    <div class="card">
+      <span class="confetti-emoji">🎉</span>
+      <h2 class="yes-title">Yaşasın! 🎊</h2>
+      <span class="yes-hearts">💗 💖 💗</span>
+      <p class="yes-msg">
+        Sen beni çok mutlu ettin <strong>Sude</strong>! 🌸<br>
+        Bu en güzel anlardan biri olacak.<br>
+        Seninle her şey çok daha güzel. ✨
+      </p>
+      <div class="date-badge" id="dateBadge">📅 İlk günümüz: yükleniyor...</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ========== YILDIZLAR ==========
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() * 3 + 1;
+    s.style.cssText = `
+      left: ${Math.random()*100}%;
+      top: ${Math.random()*100}%;
+      width: ${sz}px; height: ${sz}px;
+      --dur: ${Math.random()*4+2}s;
+      animation-delay: ${Math.random()*5}s;
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // ========== YÜZEN KALPLER ==========
+  const heartsEl = document.getElementById('fhearts');
+  const heartEmojis = ['❤️','💕','💖','💗','💓','🌸','✨','💫','🌹'];
+  function spawnHeart() {
+    const h = document.createElement('div');
+    h.className = 'fheart';
+    h.textContent = heartEmojis[Math.floor(Math.random()*heartEmojis.length)];
+    h.style.cssText = `
+      left: ${Math.random()*100}%;
+      --sz: ${Math.floor(Math.random()*20+14)}px;
+      --dur: ${Math.random()*6+7}s;
+      animation-delay: ${Math.random()*2}s;
+    `;
+    heartsEl.appendChild(h);
+    setTimeout(() => h.remove(), 14000);
+  }
+  setInterval(spawnHeart, 700);
+  for (let i = 0; i < 8; i++) setTimeout(spawnHeart, i * 300);
+
+  // ========== MÜZİK SİSTEMİ (Web Audio API — Telif Yok) ==========
+  let audioCtx = null;
+  let masterGain = null;
+  let reverbNode = null;
+  let bgMusicPlaying = false;
+  let bgLoopTimeout = null;
+  let musicBtn = null;
+
+  function getAudioCtx() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = audioCtx.createGain();
+      masterGain.gain.value = 0.55;
+      reverbNode = createReverb(audioCtx);
+      reverbNode.connect(masterGain);
+      masterGain.connect(audioCtx.destination);
+    }
+    return audioCtx;
+  }
+
+  // Konvolüsyon reverb (yankı efekti)
+  function createReverb(ctx) {
+    const convolver = ctx.createConvolver();
+    const length = ctx.sampleRate * 2.5;
+    const impulse = ctx.createBuffer(2, length, ctx.sampleRate);
+    for (let c = 0; c < 2; c++) {
+      const ch = impulse.getChannelData(c);
+      for (let i = 0; i < length; i++) {
+        ch[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 2.8);
+      }
+    }
+    convolver.buffer = impulse;
+    return convolver;
+  }
+
+  // Piyano benzeri nota çal (ADSR zarfı)
+  function playNote(freq, startTime, dur, vol = 0.18, pan = 0) {
+    try {
+      const ctx = getAudioCtx();
+      // Ana osillatör (sine)
+      const osc = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const panner = ctx.createStereoPanner();
+
+      osc.type = 'sine';
+      osc2.type = 'triangle';
+      osc.frequency.value = freq;
+      osc2.frequency.value = freq * 2.001; // hafif detune harmoni
+
+      panner.pan.value = pan;
+
+      // ADSR
+      const atk = 0.01, dec = 0.1, sus = vol * 0.6, rel = dur * 0.55;
+      gain.gain.setValueAtTime(0, startTime);
+      gain.gain.linearRampToValueAtTime(vol, startTime + atk);
+      gain.gain.linearRampToValueAtTime(sus, startTime + atk + dec);
+      gain.gain.setValueAtTime(sus, startTime + dur - rel);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + dur);
+
+      osc.connect(gain);
+      osc2.connect(gain);
+      gain.connect(panner);
+      panner.connect(reverbNode);
+      panner.connect(masterGain); // dry sinyal de ekle
+
+      osc.start(startTime);
+      osc.stop(startTime + dur + 0.05);
+      osc2.start(startTime);
+      osc2.stop(startTime + dur + 0.05);
+    } catch(e) {}
+  }
+
+  // Bas nota (sol el)
+  function playBass(freq, startTime, dur, vol = 0.12) {
+    try {
+      const ctx = getAudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, startTime);
+      gain.gain.linearRampToValueAtTime(vol, startTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + dur);
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.start(startTime);
+      osc.stop(startTime + dur);
+    } catch(e) {}
+  }
+
+  // ===== ROMANTİK VALS MELODİSİ (Do majör / La minör) =====
+  // Her nota: [frekans Hz, başlangıç sn, süre sn, ses, pan]
+  const NOTE = {
+    C3:130.81, D3:146.83, E3:164.81, F3:174.61, G3:196.00, A3:220.00, B3:246.94,
+    C4:261.63, D4:293.66, E4:329.63, F4:349.23, G4:392.00, A4:440.00, B4:493.88,
+    C5:523.25, D5:587.33, E5:659.25, F5:698.46, G5:783.99, A5:880.00, B5:987.77,
+    C6:1046.50
+  };
+
+  // Melodi (sağ el) — romantik vals teması
+  const melodyPattern = [
+    // Ölçü 1 – C maj
+    [NOTE.E5, 0.0,  0.55, 0.20,  0.2],
+    [NOTE.G5, 0.5,  0.55, 0.18,  0.3],
+    [NOTE.C6, 1.0,  0.9,  0.22,  0.4],
+    [NOTE.B5, 1.9,  0.45, 0.17,  0.3],
+    [NOTE.A5, 2.3,  0.45, 0.16,  0.2],
+    // Ölçü 2 – A min
+    [NOTE.G5, 3.0,  0.55, 0.18,  0.1],
+    [NOTE.E5, 3.5,  0.55, 0.17,  0.0],
+    [NOTE.A4, 4.0,  0.9,  0.20,  0.0],
+    [NOTE.B4, 4.9,  0.45, 0.15, -0.1],
+    [NOTE.C5, 5.3,  0.45, 0.15,  0.0],
+    // Ölçü 3 – F maj
+    [NOTE.D5, 6.0,  0.55, 0.18, -0.1],
+    [NOTE.F5, 6.5,  0.55, 0.18, -0.2],
+    [NOTE.A5, 7.0,  0.9,  0.20, -0.3],
+    [NOTE.G5, 7.9,  0.45, 0.16, -0.2],
+    [NOTE.F5, 8.3,  0.45, 0.15, -0.1],
+    // Ölçü 4 – G maj (dominant)
+    [NOTE.E5, 9.0,  0.55, 0.17,  0.0],
+    [NOTE.D5, 9.5,  0.55, 0.17,  0.1],
+    [NOTE.G4, 10.0, 0.9,  0.19,  0.1],
+    [NOTE.A4, 10.9, 0.45, 0.15,  0.2],
+    [NOTE.B4, 11.3, 0.45, 0.15,  0.3],
+    // Ölçü 5 – C maj köprü
+    [NOTE.C5, 12.0, 0.55, 0.20,  0.2],
+    [NOTE.E5, 12.5, 0.55, 0.18,  0.3],
+    [NOTE.G5, 13.0, 1.2,  0.22,  0.4],
+    [NOTE.E5, 14.2, 0.4,  0.16,  0.2],
+    [NOTE.D5, 14.6, 0.4,  0.15,  0.1],
+    // Ölçü 6 – A min
+    [NOTE.C5, 15.0, 0.55, 0.18,  0.0],
+    [NOTE.A4, 15.5, 0.55, 0.17, -0.1],
+    [NOTE.E4, 16.0, 1.2,  0.20, -0.2],
+    [NOTE.F4, 17.2, 0.4,  0.15, -0.1],
+    [NOTE.G4, 17.6, 0.4,  0.15,  0.0],
+    // Ölçü 7 – F maj
+    [NOTE.A4, 18.0, 0.55, 0.18, -0.1],
+    [NOTE.C5, 18.5, 0.55, 0.18, -0.2],
+    [NOTE.F5, 19.0, 1.0,  0.21, -0.3],
+    [NOTE.E5, 20.0, 0.45, 0.16, -0.2],
+    [NOTE.D5, 20.5, 0.45, 0.15, -0.1],
+    // Ölçü 8 – G → C bitiş
+    [NOTE.C5, 21.0, 0.55, 0.17,  0.0],
+    [NOTE.B4, 21.5, 0.55, 0.17,  0.1],
+    [NOTE.G4, 22.0, 0.7,  0.18,  0.1],
+    [NOTE.E4, 22.7, 0.4,  0.15,  0.0],
+    [NOTE.C4, 23.1, 1.3,  0.20,  0.0],
+  ];
+
+  // Bas + akor (sol el) — vals ritmi (1-2-3)
+  const bassPattern = [
+    // Ölçü 1 C maj: C2 bas + E4G4 akor
+    [NOTE.C3, 0.0, 0.4, 0.13],
+    [NOTE.E4, 0.5, 0.3, 0.08], [NOTE.G4, 0.5, 0.3, 0.08],
+    [NOTE.E4, 1.0, 0.3, 0.08], [NOTE.G4, 1.0, 0.3, 0.08],
+    // Ölçü 2 A min
+    [NOTE.A3, 3.0, 0.4, 0.13],
+    [NOTE.C4, 3.5, 0.3, 0.08], [NOTE.E4, 3.5, 0.3, 0.08],
+    [NOTE.C4, 4.0, 0.3, 0.08], [NOTE.E4, 4.0, 0.3, 0.08],
+    // Ölçü 3 F maj
+    [NOTE.F3, 6.0, 0.4, 0.13],
+    [NOTE.A3, 6.5, 0.3, 0.08], [NOTE.C4, 6.5, 0.3, 0.08],
+    [NOTE.A3, 7.0, 0.3, 0.08], [NOTE.C4, 7.0, 0.3, 0.08],
+    // Ölçü 4 G maj
+    [NOTE.G3, 9.0, 0.4, 0.13],
+    [NOTE.B3, 9.5, 0.3, 0.08], [NOTE.D4, 9.5, 0.3, 0.08],
+    [NOTE.B3,10.0, 0.3, 0.08], [NOTE.D4,10.0, 0.3, 0.08],
+    // Ölçü 5 C maj
+    [NOTE.C3,12.0, 0.4, 0.13],
+    [NOTE.E4,12.5, 0.3, 0.08], [NOTE.G4,12.5, 0.3, 0.08],
+    [NOTE.E4,13.0, 0.3, 0.08], [NOTE.G4,13.0, 0.3, 0.08],
+    // Ölçü 6 A min
+    [NOTE.A3,15.0, 0.4, 0.13],
+    [NOTE.C4,15.5, 0.3, 0.08], [NOTE.E4,15.5, 0.3, 0.08],
+    [NOTE.C4,16.0, 0.3, 0.08], [NOTE.E4,16.0, 0.3, 0.08],
+    // Ölçü 7 F maj
+    [NOTE.F3,18.0, 0.4, 0.13],
+    [NOTE.A3,18.5, 0.3, 0.08], [NOTE.C4,18.5, 0.3, 0.08],
+    [NOTE.A3,19.0, 0.3, 0.08], [NOTE.C4,19.0, 0.3, 0.08],
+    // Ölçü 8 G→C
+    [NOTE.G3,21.0, 0.4, 0.13],
+    [NOTE.B3,21.5, 0.3, 0.08], [NOTE.D4,21.5, 0.3, 0.08],
+    [NOTE.C3,22.0, 0.4, 0.14],
+    [NOTE.E4,22.5, 0.3, 0.08], [NOTE.G4,22.5, 0.3, 0.08],
+  ];
+
+  const LOOP_DURATION = 24.5; // saniye — tam 8 ölçü
+
+  function scheduleMusicLoop(startOffset = 0) {
+    if (!bgMusicPlaying) return;
+    const ctx = getAudioCtx();
+    const t0 = ctx.currentTime + startOffset;
+
+    melodyPattern.forEach(([freq, s, dur, vol, pan]) => {
+      playNote(freq, t0 + s, dur, vol, pan);
+    });
+    bassPattern.forEach(([freq, s, dur, vol]) => {
+      playBass(freq, t0 + s, dur, vol);
+    });
+
+    // Döngü: bir sonraki turu planla
+    bgLoopTimeout = setTimeout(() => scheduleMusicLoop(0), (LOOP_DURATION - startOffset) * 1000 - 200);
+  }
+
+  function startBgMusic() {
+    if (bgMusicPlaying) return;
+    bgMusicPlaying = true;
+    getAudioCtx();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    scheduleMusicLoop(0);
+    if (musicBtn) {
+      musicBtn.textContent = '🔇';
+      musicBtn.title = 'Müziği kapat';
+    }
+  }
+
+  function stopBgMusic() {
+    bgMusicPlaying = false;
+    clearTimeout(bgLoopTimeout);
+    if (masterGain) masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+    setTimeout(() => {
+      if (masterGain) masterGain.gain.value = 0.55;
+    }, 600);
+    if (musicBtn) {
+      musicBtn.textContent = '🎵';
+      musicBtn.title = 'Müziği aç';
+    }
+  }
+
+  function toggleMusic() {
+    if (bgMusicPlaying) stopBgMusic();
+    else startBgMusic();
+  }
+
+  // Müzik kontrol butonu oluştur
+  function createMusicButton() {
+    musicBtn = document.createElement('button');
+    musicBtn.textContent = '🎵';
+    musicBtn.title = 'Müziği aç';
+    musicBtn.onclick = toggleMusic;
+    musicBtn.style.cssText = `
+      position: fixed; bottom: 20px; right: 20px;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(255,107,157,0.25);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255,107,157,0.5);
+      color: white; font-size: 1.4rem;
+      cursor: pointer; z-index: 9999;
+      box-shadow: 0 4px 20px rgba(255,107,157,0.3);
+      transition: all 0.3s;
+    `;
+    musicBtn.onmouseover = () => musicBtn.style.transform = 'scale(1.15)';
+    musicBtn.onmouseout = () => musicBtn.style.transform = 'scale(1)';
+    document.body.appendChild(musicBtn);
+  }
+  createMusicButton();
+
+  // Kısa efekt sesleri (artık reverb üzerinden)
+  function playTone(freq, dur, type = 'sine', vol = 0.3) {
+    playNote(freq, audioCtx ? audioCtx.currentTime : 0, dur, vol * 0.6, 0);
+  }
+
+  function playMelody(notes) {
+    getAudioCtx();
+    notes.forEach(([freq, delay, dur]) => {
+      setTimeout(() => playNote(freq, audioCtx.currentTime, dur, 0.18, 0), delay);
+    });
+  }
+
+  function playOpenSound() {
+    getAudioCtx();
+    [[NOTE.E5, 0], [NOTE.G5, 130], [NOTE.C6, 260]].forEach(([f, d]) =>
+      setTimeout(() => playNote(f, audioCtx.currentTime, 0.4, 0.15, 0), d)
+    );
+  }
+
+  function playSuccessSound() {
+    getAudioCtx();
+    const s = [[NOTE.C5,0],[NOTE.E5,100],[NOTE.G5,200],[NOTE.C6,320],[NOTE.E6||NOTE.C6*1.26,520]];
+    s.forEach(([f,d]) => setTimeout(() => playNote(f, audioCtx.currentTime, 0.5, 0.18, 0), d));
+  }
+
+  function playNudgeSound() {
+    getAudioCtx();
+    playNote(180, audioCtx.currentTime, 0.12, 0.08, 0);
+  }
+
+  function playJingleSound() {
+    // Evet sonrası parlak fanfar
+    getAudioCtx();
+    const fanfare = [
+      [NOTE.C5,0,0.2],[NOTE.E5,150,0.2],[NOTE.G5,300,0.2],
+      [NOTE.C6,450,0.5],[NOTE.G5,750,0.2],[NOTE.E5,900,0.2],[NOTE.C6,1050,0.7]
+    ];
+    fanfare.forEach(([f,d,dur]) => setTimeout(() => playNote(f, audioCtx.currentTime, dur, 0.22, 0), d));
+  }
+
+  // ========== GEÇİŞ ANİMASYONU ==========
+  function switchScreen(fromId, toId, cb) {
+    const from = document.getElementById(fromId);
+    const to = document.getElementById(toId);
+    from.style.animation = 'none';
+    from.style.transition = 'opacity 0.4s, transform 0.4s';
+    from.style.opacity = '0';
+    from.style.transform = 'translateY(-30px) scale(0.95)';
+    setTimeout(() => {
+      from.classList.remove('active');
+      from.style = '';
+      to.classList.add('active');
+      if (cb) cb();
+    }, 420);
+  }
+
+  // ========== EKRAN 1 → 2 ==========
+  function openEnvelope() {
+    startBgMusic(); // İlk etkileşimde müzik başlasın
+    playOpenSound();
+    const env = document.getElementById('envelope');
+    env.style.transform = 'scale(1.4) rotate(15deg)';
+    env.style.transition = 'all 0.4s';
+    env.textContent = '📭';
+    setTimeout(() => {
+      switchScreen('screen-intro', 'screen-letter');
+    }, 500);
+  }
+
+  // ========== EKRAN 2 → 3 ==========
+  function goToQuestion() {
+    playOpenSound();
+    switchScreen('screen-letter', 'screen-question');
+  }
+
+  // ========== HAYIR BUTONU KAÇIYOR ==========
+  let noCount = 0;
+  const noMessages = [
+    '😅 Dur dur, kaçıyor!',
+    '🥺 Yeniden dene!',
+    '😂 Kaçamaz mısın diyorum...',
+    '🌸 Hadi bir daha!',
+    '🤭 Nereye böyle?',
+    '💭 Belki "evet" demek istersin?',
+    '😏 Bırakma yani...',
+    '🥰 Evet dersen çok mutlu olurum!',
+    '😂 Hayır butonu çok korkak!',
+    '💖 Hadi, son şans!'
+  ];
+
+  function runAway() {
+    noCount++;
+    playNudgeSound();
+    const btn = document.getElementById('noBtn');
+    const area = document.getElementById('buttonsArea');
+    const areaRect = area.getBoundingClientRect();
+    const btnRect = btn.getBoundingClientRect();
+
+    // Random konum hesapla (viewport içinde)
+    const maxX = window.innerWidth - btnRect.width - 20;
+    const maxY = window.innerHeight - btnRect.height - 20;
+
+    const randX = Math.random() * maxX;
+    const randY = Math.random() * maxY;
+
+    btn.style.position = 'fixed';
+    btn.style.left = randX + 'px';
+    btn.style.top = randY + 'px';
+    btn.style.zIndex = '999';
+    btn.style.transition = 'left 0.3s cubic-bezier(0.34,1.56,0.64,1), top 0.3s cubic-bezier(0.34,1.56,0.64,1)';
+
+    // Mesaj güncelle
+    const msgEl = document.getElementById('noMsg');
+    msgEl.textContent = noMessages[Math.min(noCount - 1, noMessages.length - 1)];
+
+    // Evet butonunu büyüt
+    const yesBtn = document.querySelector('.yes-btn');
+    const scale = Math.min(1 + noCount * 0.07, 1.6);
+    yesBtn.style.transform = `scale(${scale})`;
+  }
+
+  // ========== EVET! ==========
+  function sayYes() {
+    playSuccessSound();
+    spawnConfetti();
+    switchScreen('screen-question', 'screen-yes', () => {
+      playJingleSound();
+      spawnMassHearts();
+    });
+
+    // Tarihi yaz
+    const now = new Date();
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    document.getElementById('dateBadge').textContent =
+      '📅 İlk günümüz: ' + now.toLocaleDateString('tr-TR', options);
+  }
+
+  // ========== KONFETİ ==========
+  const confettiColors = ['#ff6b9d','#ffd700','#9c27b0','#00e676','#40c4ff','#ff4081','#ffffff'];
+  function spawnConfetti() {
+    for (let i = 0; i < 120; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.cssText = `
+        left: ${Math.random()*100}vw;
+        top: 0;
+        background: ${confettiColors[Math.floor(Math.random()*confettiColors.length)]};
+        width: ${Math.random()*10+5}px;
+        height: ${Math.random()*10+5}px;
+        border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+        --dur: ${Math.random()*3+2}s;
+        --delay: ${Math.random()*2}s;
+        animation-delay: var(--delay);
+      `;
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 6000);
+    }
+  }
+
+  // Toplu kalp patlaması
+  function spawnMassHearts() {
+    for (let i = 0; i < 20; i++) {
+      setTimeout(spawnHeart, i * 100);
+    }
+  }
+
+  // ========== PARLAMLARI ==========
+  document.addEventListener('click', (e) => {
+    const spark = document.createElement('div');
+    spark.className = 'sparkle';
+    spark.textContent = ['✨','💫','⭐','💕','🌸'][Math.floor(Math.random()*5)];
+    spark.style.cssText = `
+      left: ${e.clientX - 12}px;
+      top: ${e.clientY - 12}px;
+      font-size: 20px;
+    `;
+    document.body.appendChild(spark);
+    setTimeout(() => spark.remove(), 700);
+  });
+</script>
+</body>
+</html>
